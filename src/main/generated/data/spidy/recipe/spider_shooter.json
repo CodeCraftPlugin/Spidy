@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "c": "minecraft:cobweb",
+    "d": "minecraft:diamond",
+    "r": "minecraft:redstone"
+  },
+  "pattern": [
+    "rdr",
+    "dcd",
+    "rdr"
+  ],
+  "result": {
+    "count": 1,
+    "id": "spidy:spider_shooter"
+  }
+}

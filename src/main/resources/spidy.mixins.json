@@ -1,0 +1,18 @@
+{
+	"required": true,
+	"package": "me.codecraft.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+
+	],
+	"client": [
+		"ItemRenderMixin"
+
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"overwrites": {
+		"requireAnnotations": true
+	}
+}
