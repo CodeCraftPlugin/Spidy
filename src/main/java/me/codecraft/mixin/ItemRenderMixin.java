@@ -1,22 +1,10 @@
 package me.codecraft.mixin;
 
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.data.models.model.ItemModelUtils;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.item.ItemModels;
-import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.world.item.ItemDisplayContext;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(ItemRenderer.class)
+@Mixin(Player.class)
 public abstract class ItemRenderMixin {
 
 //    @Shadow

@@ -29,25 +29,44 @@ public class SpiderWeb extends ThrowableProjectile {
         super(MainEntity.SPIDER_WEB_ENTITY, level);
         // Get look direction from player's rotation
 
+//        this.setOwner(player);
+//        float pitch = player.getXRot();
+//        float yaw = player.getYRot();
+//        float xDir = -Mth.sin(yaw * ((float)Math.PI / 180)) * Mth.cos(pitch * ((float)Math.PI / 180));
+//        float yDir = -Mth.sin(pitch * ((float)Math.PI / 180));
+//        float zDir = Mth.cos(yaw * ((float)Math.PI / 180)) * Mth.cos(pitch * ((float)Math.PI / 180));
+//
+//        Vec3 direction = new Vec3(xDir, yDir, zDir).normalize();
+//        double speed = 1.5; // Adjust for desired launch velocity
+//        this.setDeltaMovement(direction.scale(speed));
+//
+//        // Set initial position slightly in front of player
+//        double px = player.getX() + direction.x * 0.5;
+//        double py = player.getEyeY() + direction.y * 0.5;
+//        double pz = player.getZ() + direction.z * 0.5;
+//        this.snapTo(px, py, pz, yaw, pitch);
+//
+//        this.setYRot(yaw);
+//        this.setXRot(pitch);
+//        this.yRotO = this.getYRot();
+//        this.xRotO = this.getXRot();
         this.setOwner(player);
-        float pitch = player.getXRot();
-        float yaw = player.getYRot();
-        float xDir = -Mth.sin(yaw * ((float)Math.PI / 180)) * Mth.cos(pitch * ((float)Math.PI / 180));
-        float yDir = -Mth.sin(pitch * ((float)Math.PI / 180));
-        float zDir = Mth.cos(yaw * ((float)Math.PI / 180)) * Mth.cos(pitch * ((float)Math.PI / 180));
-
-        Vec3 direction = new Vec3(xDir, yDir, zDir).normalize();
-        double speed = 1.5; // Adjust for desired launch velocity
-        this.setDeltaMovement(direction.scale(speed));
-
-        // Set initial position slightly in front of player
-        double px = player.getX() + direction.x * 0.5;
-        double py = player.getEyeY() + direction.y * 0.5;
-        double pz = player.getZ() + direction.z * 0.5;
-        this.snapTo(px, py, pz, yaw, pitch);
-
-        this.setYRot(yaw);
-        this.setXRot(pitch);
+        float f = player.getXRot();
+        float g = player.getYRot();
+        float h = Mth.cos(-g * ((float)Math.PI / 180) - (float)Math.PI);
+        float k = Mth.sin(-g * ((float)Math.PI / 180) - (float)Math.PI);
+        float l = -Mth.cos(-f * ((float)Math.PI / 180));
+        float m = Mth.sin(-f * ((float)Math.PI / 180));
+        double d = player.getX() - (double)k * 0.3;
+        double e = player.getEyeY();
+        double n = player.getZ() - (double)h * 0.3;
+        this.snapTo(d, e, n, g, f);
+        Vec3 vec3 = new Vec3(-k, Mth.clamp(-(m / l), -5.0f, 5.0f), -h);
+        double o = vec3.length();
+        vec3 = vec3.multiply(0.6 / o + this.random.triangle(0.5, 0.0103365), 0.6 / o + this.random.triangle(0.5, 0.0103365), 0.6 / o + this.random.triangle(0.5, 0.0103365));
+        this.setDeltaMovement(vec3);
+        this.setYRot((float)(Mth.atan2(vec3.x, vec3.z) * 57.2957763671875));
+        this.setXRot((float)(Mth.atan2(vec3.y, vec3.horizontalDistance()) * 57.2957763671875));
         this.yRotO = this.getYRot();
         this.xRotO = this.getXRot();
     }
