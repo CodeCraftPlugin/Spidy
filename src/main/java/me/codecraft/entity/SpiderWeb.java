@@ -50,20 +50,53 @@ public class SpiderWeb extends ThrowableProjectile {
 //        this.setXRot(pitch);
 //        this.yRotO = this.getYRot();
 //        this.xRotO = this.getXRot();
+
+//        this.setOwner(player);
+//        float f = player.getXRot(); //(up and down rotation)
+//        float g = player.getYRot(); //(left and right rotation)
+//        System.out.println(f+" "+g);
+//        float h = Mth.cos(-g * ((float)Math.PI / 180) - (float)Math.PI);
+//        float k = Mth.sin(-g * ((float)Math.PI / 180) - (float)Math.PI);
+//        float l = -Mth.cos(-f * ((float)Math.PI / 180));
+//        float m = Mth.sin(-f * ((float)Math.PI / 180));
+//
+//        Vec3  lookAngle  = player.getLookAngle();
+//        System.out.println(lookAngle);
+//        double d = player.getX() - (double)k * 0.3;
+//        double e = player.getEyeY();
+//        double n = player.getZ() - (double)h * 0.3;
+//        this.snapTo(d, e, n, g, f);
+//        Vec3 vec3 = new Vec3(-k, Mth.clamp(-(m / l), -5.0f, 5.0f), -h);
+//        double o = vec3.length();
+//        vec3 = vec3.multiply(0.6 / o + this.random.triangle(0.5, 0.0103365), 0.6 / o + this.random.triangle(0.5, 0.0103365), 0.6 / o + this.random.triangle(0.5, 0.0103365));
+//        this.setDeltaMovement(vec3);
+//        this.setYRot((float)(Mth.atan2(vec3.x, vec3.z) * 57.2957763671875));
+//        this.setXRot((float)(Mth.atan2(vec3.y, vec3.horizontalDistance()) * 57.2957763671875));
+//        this.yRotO = this.getYRot();
+//        this.xRotO = this.getXRot();
+
         this.setOwner(player);
-        float f = player.getXRot();
-        float g = player.getYRot();
-        float h = Mth.cos(-g * ((float)Math.PI / 180) - (float)Math.PI);
-        float k = Mth.sin(-g * ((float)Math.PI / 180) - (float)Math.PI);
-        float l = -Mth.cos(-f * ((float)Math.PI / 180));
-        float m = Mth.sin(-f * ((float)Math.PI / 180));
-        double d = player.getX() - (double)k * 0.3;
+        Vec3 look = player.getLookAngle();
+
+// Restore the forward offset so it spawns in front of the player
+        double d = player.getX() + look.x * 0.3;
         double e = player.getEyeY();
-        double n = player.getZ() - (double)h * 0.3;
-        this.snapTo(d, e, n, g, f);
-        Vec3 vec3 = new Vec3(-k, Mth.clamp(-(m / l), -5.0f, 5.0f), -h);
-        double o = vec3.length();
-        vec3 = vec3.multiply(0.6 / o + this.random.triangle(0.5, 0.0103365), 0.6 / o + this.random.triangle(0.5, 0.0103365), 0.6 / o + this.random.triangle(0.5, 0.0103365));
+        double n = player.getZ() + look.z * 0.3;
+        this.snapTo(d, e, n, player.getYRot(), player.getXRot());
+
+        double hLen = Math.sqrt(look.x * look.x + look.z * look.z);
+        double normX = (hLen > 0) ? look.x / hLen : 0;
+        double normZ = (hLen > 0) ? look.z / hLen : 0;
+
+        double baseSpeed = 0.8;
+        double loft      = 0.25;
+
+        Vec3 vec3 = new Vec3(
+                normX * baseSpeed + this.random.triangle(0.0, 0.0103365),
+                look.y * baseSpeed + loft + this.random.triangle(0.0, 0.0103365),
+                normZ * baseSpeed + this.random.triangle(0.0, 0.0103365)
+        );
+
         this.setDeltaMovement(vec3);
         this.setYRot((float)(Mth.atan2(vec3.x, vec3.z) * 57.2957763671875));
         this.setXRot((float)(Mth.atan2(vec3.y, vec3.horizontalDistance()) * 57.2957763671875));
