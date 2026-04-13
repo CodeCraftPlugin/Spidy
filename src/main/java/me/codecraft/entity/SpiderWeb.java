@@ -29,25 +29,53 @@ public class SpiderWeb extends ThrowableProjectile {
         super(MainEntity.SPIDER_WEB_ENTITY, level);
         // Get look direction from player's rotation
 
+//        this.setOwner(player);
+//        float pitch = player.getXRot();
+//        float yaw = player.getYRot();
+//        float xDir = -Mth.sin(yaw * ((float)Math.PI / 180)) * Mth.cos(pitch * ((float)Math.PI / 180));
+//        float yDir = -Mth.sin(pitch * ((float)Math.PI / 180));
+//        float zDir = Mth.cos(yaw * ((float)Math.PI / 180)) * Mth.cos(pitch * ((float)Math.PI / 180));
+//
+//        Vec3 direction = new Vec3(xDir, yDir, zDir).normalize();
+//        double speed = 1.5; // Adjust for desired launch velocity
+//        this.setDeltaMovement(direction.scale(speed));
+//
+//        // Set initial position slightly in front of player
+//        double px = player.getX() + direction.x * 0.5;
+//        double py = player.getEyeY() + direction.y * 0.5;
+//        double pz = player.getZ() + direction.z * 0.5;
+//        this.snapTo(px, py, pz, yaw, pitch);
+//
+//        this.setYRot(yaw);
+//        this.setXRot(pitch);
+//        this.yRotO = this.getYRot();
+//        this.xRotO = this.getXRot();
+
         this.setOwner(player);
-        float pitch = player.getXRot();
-        float yaw = player.getYRot();
-        float xDir = -Mth.sin(yaw * ((float)Math.PI / 180)) * Mth.cos(pitch * ((float)Math.PI / 180));
-        float yDir = -Mth.sin(pitch * ((float)Math.PI / 180));
-        float zDir = Mth.cos(yaw * ((float)Math.PI / 180)) * Mth.cos(pitch * ((float)Math.PI / 180));
+        Vec3 look = player.getLookAngle();
 
-        Vec3 direction = new Vec3(xDir, yDir, zDir).normalize();
-        double speed = 1.5; // Adjust for desired launch velocity
-        this.setDeltaMovement(direction.scale(speed));
+// Restore the forward offset so it spawns in front of the player
+        double d = player.getX() + look.x * 0.3;
+        double e = player.getEyeY();
+        double n = player.getZ() + look.z * 0.3;
+        this.snapTo(d, e, n, player.getYRot(), player.getXRot());
 
-        // Set initial position slightly in front of player
-        double px = player.getX() + direction.x * 0.5;
-        double py = player.getEyeY() + direction.y * 0.5;
-        double pz = player.getZ() + direction.z * 0.5;
-        this.snapTo(px, py, pz, yaw, pitch);
+        double hLen = Math.sqrt(look.x * look.x + look.z * look.z);
+        double normX = (hLen > 0) ? look.x / hLen : 0;
+        double normZ = (hLen > 0) ? look.z / hLen : 0;
 
-        this.setYRot(yaw);
-        this.setXRot(pitch);
+        double baseSpeed = 0.8;
+        double loft      = 0.25;
+
+        Vec3 vec3 = new Vec3(
+                normX * baseSpeed + this.random.triangle(0.0, 0.0103365),
+                look.y * baseSpeed + loft + this.random.triangle(0.0, 0.0103365),
+                normZ * baseSpeed + this.random.triangle(0.0, 0.0103365)
+        );
+
+        this.setDeltaMovement(vec3);
+        this.setYRot((float)(Mth.atan2(vec3.x, vec3.z) * 57.2957763671875));
+        this.setXRot((float)(Mth.atan2(vec3.y, vec3.horizontalDistance()) * 57.2957763671875));
         this.yRotO = this.getYRot();
         this.xRotO = this.getXRot();
     }
